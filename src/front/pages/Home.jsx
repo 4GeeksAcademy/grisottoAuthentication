@@ -1,52 +1,90 @@
-import React, { useEffect } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { Link } from "react-router-dom";
 
 export const Home = () => {
+  const isLoggedIn = !!localStorage.getItem('token');
 
-	const { store, dispatch } = useGlobalReducer()
-
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
-
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
-
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
-	}
-
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
-	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
-			</div>
-		</div>
-	);
-}; 
+  return (
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-8">
+          <div className="card shadow">
+            <div className="card-body text-center p-5">
+              <h1 className="mb-4">Welcome to Auth Demo</h1>
+              
+              <p className="lead mb-5">
+                A simple authentication demo with secure login and protected routes.
+              </p>
+              
+              {isLoggedIn ? (
+                <div className="row mb-4">
+                  <div className="col-md-6">
+                    <div className="card mb-3">
+                      <div className="card-body">
+                        <h5 className="card-title">Private Area</h5>
+                        <p className="card-text">Access the protected content.</p>
+                        <Link to="/private" className="btn btn-primary">
+                          Go to Private Area
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="card mb-3">
+                      <div className="card-body">
+                        <h5 className="card-title">Logout</h5>
+                        <p className="card-text">Sign out of your account.</p>
+                        <button 
+                          className="btn btn-outline-danger"
+                          onClick={() => {
+                            sessionStorage.removeItem('token');
+                            window.location.reload();
+                          }}
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="row mb-4">
+                  <div className="col-md-6">
+                    <div className="card mb-3">
+                      <div className="card-body">
+                        <h5 className="card-title">Sign Up</h5>
+                        <p className="card-text">Create a new account.</p>
+                        <Link to="/signup" className="btn btn-primary">
+                          Sign Up
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="card mb-3">
+                      <div className="card-body">
+                        <h5 className="card-title">Login</h5>
+                        <p className="card-text">Access your account.</p>
+                        <Link to="/login" className="btn btn-outline-secondary">
+                          Login
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="mt-4 bg-light p-3 rounded">
+                <p className="mb-0">
+                  This demo shows JWT authentication with protected routes.
+                </p>
+              </div>
+            </div>
+            <div className="card-footer text-center text-muted">
+              Auth Demo Project &copy; {new Date().getFullYear()}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -54,14 +54,14 @@ def handleLogIn():
         return jsonify({"msg": "Invalid username or password"}), 401
     
     expiration = datetime.timedelta(days = 7)
-    access_token = create_access_token(identity = user.id, expires_delta = expiration) #THIS!!!
+    access_token = create_access_token(identity = user.email, expires_delta = expiration) #THIS!!!
     return jsonify({"token": access_token}), 200
 
 @api.route('/private', methods=['GET'])
 @jwt_required()
 def privateRoute():
     current_user = get_jwt_identity()
-    user = User.query.filter_by(id=current_user).first()
+    user = User.query.filter_by(email=current_user).first()
     if not user:
         return jsonify({"msg": "User not found"}), 404
     
