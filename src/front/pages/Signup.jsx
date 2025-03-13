@@ -18,27 +18,30 @@ export const Signup = () => {
             return
         }
 
-        const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: email.toLowerCase(),
-                password: password
-            })
-
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            alert(errorData.msg || "Sign up failed. Please try again or Not");
-            return;
+        try {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: email.toLowerCase(),
+                    password: password
+                })
+            });
+    
+            const data = await response.json();
+            
+            if (!response.ok) {
+                alert(data.msg || "Sign up failed. Please try again.");
+                return;
+            }
+    
+            console.log("data from signup", data);
+            alert("signup successful please login");
+            navigate("/login");
+        } catch (error) {
+            console.error("Error during signup:", error);
+            alert("An error occurred during signup");
         }
-
-        const data = await response.json();
-        // console.log("data from signup", data);
-        console.log("data from signup", data);
-        alert("signup succesfull please login");
-        navigate("/login");
     }
 
     return (
