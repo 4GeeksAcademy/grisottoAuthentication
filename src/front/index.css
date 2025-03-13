@@ -1,0 +1,25 @@
+.authDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+    margin: 3rem;
+    padding: 1.5rem;
+    border-radius: 0.385rem;
+
+}
+
+.authDiv input {
+    margin-bottom: 5px;
+    text-align: center;
+    /* display: flex; */
+    /* flex-direction: column; */
+    width: 40%;
+}
+
+.authDiv form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
